@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Habit
 from rest_framework.pagination import PageNumberPagination
+from django.contrib.auth import get_user_model
 
 
 class HabitValidator:
@@ -56,3 +57,22 @@ class HabitSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('user',)  # Пользователь проставляется автоматически из реквеста
         validators = [HabitValidator()]
+
+
+User = get_user_model()
+
+class UserRegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'password')
+
+    def create(self, validated_data):
+        # Хешируем пароль перед сохранением в базу данных
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data.get('email', ''),
+            password=validated_data['password']
+        )
+        return user

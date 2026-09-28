@@ -5,6 +5,11 @@ from .serializers import HabitSerializer
 from .permissions import IsOwner
 from .serializers import HabitPagination
 
+from rest_framework import generics
+from rest_framework.permissions import AllowAny
+from django.contrib.auth import get_user_model
+from .serializers import UserRegisterSerializer
+
 
 class HabitViewSet(viewsets.ModelViewSet):
     """CRUD для привычек текущего пользователя."""
@@ -28,3 +33,9 @@ class PublicHabitViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = HabitSerializer
     queryset = Habit.objects.filter(is_public=True)
     permission_classes = [IsAuthenticated]
+
+class UserRegisterView(generics.CreateAPIView):
+    """Эндпоинт регистрации нового пользователя."""
+    queryset = get_user_model().objects.all()
+    serializer_class = UserRegisterSerializer
+    permission_classes = [AllowAny]
