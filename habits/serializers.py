@@ -6,10 +6,10 @@ from django.contrib.auth import get_user_model
 
 class HabitValidator:
     def __call__(self, attrs):
-        is_pleasant = attrs.get('is_pleasant', False)
-        related_habit = attrs.get('related_habit')
-        reward = attrs.get('reward')
-        periodicity = attrs.get('periodicity')
+        is_pleasant = attrs.get("is_pleasant", False)
+        related_habit = attrs.get("related_habit")
+        reward = attrs.get("reward")
+        periodicity = attrs.get("periodicity")
 
         # 1. Исключить одновременный выбор связанной привычки и вознаграждения
         if related_habit and reward:
@@ -39,40 +39,35 @@ class HabitValidator:
 
 class HabitPagination(PageNumberPagination):
     """Пагинация для привычек: по 5 элементов на страницу."""
+
     page_size = 5
-    page_size_query_param = 'page_size'
+    page_size_query_param = "page_size"
     max_page_size = 50
 
 
 class HabitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Habit
-        fields = '__all__'
-        read_only_fields = ('user',)
-        validators = [HabitValidator()]
-
-class HabitSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Habit
-        fields = '__all__'
-        read_only_fields = ('user',)  # Пользователь проставляется автоматически из реквеста
+        fields = "__all__"
+        read_only_fields = ("user",)
         validators = [HabitValidator()]
 
 
 User = get_user_model()
+
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password')
+        fields = ("id", "username", "email", "password")
 
     def create(self, validated_data):
         # Хешируем пароль перед сохранением в базу данных
         user = User.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data.get('email', ''),
-            password=validated_data['password']
+            username=validated_data["username"],
+            email=validated_data.get("email", ""),
+            password=validated_data["password"],
         )
         return user

@@ -3,9 +3,9 @@ from rest_framework.routers import DefaultRouter
 from .views import HabitViewSet, PublicHabitViewSet
 
 router = DefaultRouter()
-router.register(r'habits', HabitViewSet, basename='habits')
-router.register(r'public', PublicHabitViewSet, basename='public-habits')
+router.register(r"habits", HabitViewSet, basename="habits")
+router.register(r"public", PublicHabitViewSet, basename="public-habits")
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path("", include(router.urls)),
 ]

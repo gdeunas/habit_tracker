@@ -37,15 +37,15 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'rest_framework',
-    'habits',
-    'corsheaders',
-    'drf_yasg',
+    "rest_framework",
+    "habits",
+    "corsheaders",
+    "drf_yasg",
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -107,11 +107,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     )
 }
-
 
 
 # Internationalization
@@ -132,16 +131,16 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 # Добавляем ?protocol=2 прямо в конец строки подключения
-CELERY_BROKER_URL = 'redis://localhost:6379/0?protocol=2'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0?protocol=2'
+CELERY_BROKER_URL = "redis://localhost:6379/0?protocol=2"
+CELERY_RESULT_BACKEND = "redis://localhost:6379/0?protocol=2"
 
 # Эти строки можно оставить для подстраховки
-CELERY_BROKER_TRANSPORT_OPTIONS = {'protocol': 2}
-CELERY_REDIS_BACKEND_TRANSPORT_OPTIONS = {'protocol': 2}
+CELERY_BROKER_TRANSPORT_OPTIONS = {"protocol": 2}
+CELERY_REDIS_BACKEND_TRANSPORT_OPTIONS = {"protocol": 2}
 
 CELERY_BEAT_SCHEDULE = {
-    'send-habit-reminders-every-minute': {
-        'task': 'habits.tasks.send_habit_reminders',
-        'schedule': 60.0,  # Запуск каждые 60 секунд (1 минута)
+    "send-habit-reminders-every-minute": {
+        "task": "habits.tasks.send_habit_reminders",
+        "schedule": 60.0,  # Запуск каждые 60 секунд (1 минута)
     },
 }

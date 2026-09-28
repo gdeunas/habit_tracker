@@ -11,7 +11,9 @@ class HabitTestCase(APITestCase):
 
     def setUp(self):
         # Создаем тестового пользователя и авторизуем его
-        self.user = User.objects.create_user(username="testuser", password="testpassword123")
+        self.user = User.objects.create_user(
+            username="testuser", password="testpassword123"
+        )
         self.client.force_authenticate(user=self.user)
 
         # Создаем базовую приятную привычку для тестов связанных привычек
@@ -21,7 +23,7 @@ class HabitTestCase(APITestCase):
             time="08:00:00",
             action="Принять пенную ванну",
             is_pleasant=True,
-            duration=60
+            duration=60,
         )
 
     def test_create_habit_success(self):
@@ -33,9 +35,9 @@ class HabitTestCase(APITestCase):
             "is_pleasant": False,
             "reward": "Скушать яблоко",
             "duration": 90,
-            "periodicity": 1
+            "periodicity": 1,
         }
-        response = self.client.post(reverse('habits-list'), data=data)
+        response = self.client.post(reverse("habits-list"), data=data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Habit.objects.filter(action="Пробежка 1 км").count(), 1)
 
@@ -46,9 +48,9 @@ class HabitTestCase(APITestCase):
             "time": "07:00:00",
             "action": "Долгая пробежка",
             "duration": 150,  # Ошибка: больше 120
-            "periodicity": 1
+            "periodicity": 1,
         }
-        response = self.client.post(reverse('habits-list'), data=data)
+        response = self.client.post(reverse("habits-list"), data=data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_simultaneous_reward_and_related_error(self):
@@ -60,9 +62,9 @@ class HabitTestCase(APITestCase):
             "related_habit": self.pleasant_habit.id,
             "reward": "Шоколадка",  # Ошибка: заполнено оба поля
             "duration": 60,
-            "periodicity": 1
+            "periodicity": 1,
         }
-        response = self.client.post(reverse('habits-list'), data=data)
+        response = self.client.post(reverse("habits-list"), data=data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_periodicity_validation_error(self):
@@ -72,15 +74,15 @@ class HabitTestCase(APITestCase):
             "time": "18:00:00",
             "action": "Тяжелая тренировка",
             "duration": 60,
-            "periodicity": 10  # Ошибка: больше 7 дней
+            "periodicity": 10,  # Ошибка: больше 7 дней
         }
-        response = self.client.post(reverse('habits-list'), data=data)
+        response = self.client.post(reverse("habits-list"), data=data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_get_habits_list_pagination(self):
         """Тест работы пагинации списка привычек текущего пользователя."""
-        response = self.client.get(reverse('habits-list'))
+        response = self.client.get(reverse("habits-list"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # Проверяем структуру пагинации, требуемую по ТЗ
-        self.assertIn('count', response.data)
-        self.assertIn('results', response.data)
+        self.assertIn("count", response.data)
+        self.assertIn("results", response.data)
